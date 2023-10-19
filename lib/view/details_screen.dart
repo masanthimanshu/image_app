@@ -43,6 +43,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(jsonData["message"])),
         );
+
+        Navigator.pop(context);
       },
     );
   }
