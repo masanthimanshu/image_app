@@ -39,13 +39,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => const DetailsScreen(),
+                              builder: (_) => DetailsScreen(
+                                imgUrl: res.value!.images[index].xtImage,
+                              ),
                             ),
                           );
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(5),
                           child: Image.network(
+                            height: 225,
+                            fit: BoxFit.contain,
                             res.value!.images[index].xtImage,
                           ),
                         ),

@@ -1,12 +1,14 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:image_sample/network/endpoints.dart';
 import 'package:image_sample/network/requests.dart';
 
 class DetailsScreen extends StatefulWidget {
-  const DetailsScreen({super.key});
+  const DetailsScreen({
+    super.key,
+    required this.imgUrl,
+  });
+
+  final String imgUrl;
 
   @override
   State<DetailsScreen> createState() => _DetailsScreenState();
@@ -14,22 +16,20 @@ class DetailsScreen extends StatefulWidget {
 
 class _DetailsScreenState extends State<DetailsScreen> {
   final _formKey = GlobalKey<FormState>();
-  final ImagePicker _picker = ImagePicker();
 
-  bool _showImg = false;
+  final _emailPattern = RegExp(r'^[\w-]+@[\w-]+\.\w+$');
+  final _phonePattern = RegExp(r'^\d{10}$');
 
   String _firstName = "";
   String _lastName = "";
   String _email = "";
   String _phone = "";
 
-  late File _imageFile;
-
   _handleSubmit() {
     Map<String, dynamic> data = {
-      "image": _imageFile.path,
       "first_name": _firstName,
       "last_name": _lastName,
+      "image": widget.imgUrl,
       "email": _email,
       "phone": _phone,
     };
@@ -45,20 +45,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
     );
   }
 
-  _uploadImage() async {
-    final XFile? image = await _picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 75,
-    );
-
-    if (image != null) {
-      setState(() {
-        _imageFile = File(image.path);
-        _showImg = true;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,20 +54,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
         child: ListView(
           physics: const BouncingScrollPhysics(),
           children: [
-            GestureDetector(
-              onTap: _uploadImage,
-              child: Container(
-                height: 250,
-                margin: const EdgeInsets.all(10),
-                child: _showImg
-                    ? Image.file(
-                        _imageFile,
-                        fit: BoxFit.cover,
-                      )
-                    : Image.asset(
-                        "assets/images/upload_image.png",
-                        fit: BoxFit.contain,
-                      ),
+            Padding(
+              padding: const EdgeInsets.all(5),
+              child: Image.network(
+                height: 225,
+                widget.imgUrl,
+                fit: BoxFit.contain,
               ),
             ),
             Padding(
@@ -155,6 +133,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         if (value == null || value.trim().isEmpty) {
                           return "Please enter your Email";
                         }
+
+                        if (!_emailPattern.hasMatch(value)) {
+                          return "Invalid Email";
+                        }
+
                         return null;
                       },
                     ),
@@ -182,6 +165,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         if (value == null || value.trim().isEmpty) {
                           return "Please enter Phone Number";
                         }
+
+                        if (!_phonePattern.hasMatch(value)) {
+                          return "Invalid Phone Number";
+                        }
+
                         return null;
                       },
                     ),
