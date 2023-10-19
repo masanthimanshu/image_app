@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:image_sample/network/endpoints.dart';
 import 'package:image_sample/network/requests.dart';
@@ -36,11 +38,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
     APIRequests().saveData(url: APIEndpoints().saveData, payload: data).then(
       (value) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(value!)),
-        );
+        final Map<String, dynamic> jsonData = json.decode(value!);
 
-        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(jsonData["message"])),
+        );
       },
     );
   }
