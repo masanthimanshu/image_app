@@ -40,6 +40,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (_) => DetailsScreen(
+                                imgTag: index.toString(),
                                 imgUrl: res.value!.images[index].xtImage,
                               ),
                             ),
@@ -47,10 +48,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(5),
-                          child: Image.network(
-                            height: 225,
-                            fit: BoxFit.contain,
-                            res.value!.images[index].xtImage,
+                          child: Hero(
+                            tag: index.toString(),
+                            child: Image.network(
+                              height: 225,
+                              fit: BoxFit.contain,
+                              res.value!.images[index].xtImage,
+                            ),
                           ),
                         ),
                       );

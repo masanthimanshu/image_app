@@ -8,9 +8,11 @@ class DetailsScreen extends StatefulWidget {
   const DetailsScreen({
     super.key,
     required this.imgUrl,
+    required this.imgTag,
   });
 
   final String imgUrl;
+  final String imgTag;
 
   @override
   State<DetailsScreen> createState() => _DetailsScreenState();
@@ -60,10 +62,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.all(5),
-              child: Image.network(
-                height: 225,
-                widget.imgUrl,
-                fit: BoxFit.contain,
+              child: Hero(
+                tag: widget.imgTag,
+                child: Image.network(
+                  height: 225,
+                  widget.imgUrl,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
             Padding(
